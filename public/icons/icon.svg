@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="50%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#064e3b"/>
+    </linearGradient>
+    <linearGradient id="androidGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background rounded squircle -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)"/>
+  <rect width="504" height="504" x="4" y="4" rx="124" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="4"/>
+
+  <!-- Android Figure -->
+  <g transform="translate(96, 96)" filter="url(#glow)">
+    <!-- Head -->
+    <path d="M 40 120 A 120 120 0 0 1 280 120 Z" fill="url(#androidGrad)"/>
+    <!-- Left Antenna -->
+    <line x1="90" y1="50" x2="60" y2="15" stroke="url(#androidGrad)" stroke-width="16" stroke-linecap="round"/>
+    <!-- Right Antenna -->
+    <line x1="230" y1="50" x2="260" y2="15" stroke="url(#androidGrad)" stroke-width="16" stroke-linecap="round"/>
+    <!-- Eyes -->
+    <circle cx="100" cy="85" r="14" fill="#0f172a"/>
+    <circle cx="220" cy="85" r="14" fill="#0f172a"/>
+    <!-- Body -->
+    <path d="M 40 135 L 280 135 A 0 0 0 0 1 280 135 L 280 260 A 30 30 0 0 1 250 290 L 70 290 A 30 30 0 0 1 40 260 Z" fill="url(#androidGrad)"/>
+    <!-- Left Arm -->
+    <rect x="0" y="135" width="26" height="110" rx="13" fill="url(#androidGrad)"/>
+    <!-- Right Arm -->
+    <rect x="294" y="135" width="26" height="110" rx="13" fill="url(#androidGrad)"/>
+    <!-- Left Leg -->
+    <rect x="90" y="295" width="28" height="60" rx="14" fill="url(#androidGrad)"/>
+    <!-- Right Leg -->
+    <rect x="202" y="295" width="28" height="60" rx="14" fill="url(#androidGrad)"/>
+  </g>
+</svg>

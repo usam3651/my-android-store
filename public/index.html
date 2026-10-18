@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>معرض وتطبيقات الأندرويد | Android Apps Store</title>
+  
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="تطبيقاتي">
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
+  <link rel="apple-touch-icon" href="/icons/icon.svg">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="selection:bg-blue-600 selection:text-white pb-16 md:pb-0">
+  
+  <!-- Animated Background Mesh -->
+  <div class="bg-mesh"></div>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
+      
+      <!-- Brand / Logo -->
+      <a href="/" class="flex items-center gap-2 sm:gap-3 text-white group min-w-0">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-blue-600 to-emerald-500 flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:scale-105 transition shrink-0">
+          <i class="fab fa-android text-xl sm:text-2xl text-white"></i>
+        </div>
+        <div class="truncate">
+          <div class="font-black text-sm sm:text-lg leading-tight dev-name truncate">معرض التطبيقات</div>
+          <div class="text-[10px] sm:text-xs text-slate-400 font-medium dev-title truncate">Android Store & Portfolio</div>
+        </div>
+      </a>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+        
+        <!-- PWA Install Button in Header -->
+        <button onclick="triggerInstallPrompt()" class="install-app-btn btn-install text-xs py-2 px-3 sm:px-4 hidden" title="تثبيت الموقع كتطبيق على جوالك">
+          <i class="fas fa-download"></i>
+          <span class="hidden sm:inline">تثبيت التطبيق</span>
+          <span class="sm:hidden">تثبيت 📲</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button id="themeToggle" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-300 hover:text-white hover:border-blue-500 transition" title="تبديل الوضع الليلي / النهاري">
+          <i id="themeIcon" class="fas fa-sun text-xs sm:text-sm"></i>
+        </button>
+
+        <!-- Admin Portal Link -->
+        <a href="/admin" class="btn-secondary text-xs py-2 px-3 sm:px-4" title="لوحة تحكم المسؤول">
+          <i class="fas fa-lock text-xs text-blue-400"></i>
+          <span class="hidden sm:inline">لوحة التحكم</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-12 pb-8">
+    <div class="glass-card p-6 sm:p-10 md:p-12 relative overflow-hidden">
+      <!-- Glow effect -->
+      <div class="absolute -top-24 -left-24 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
+        
+        <!-- Developer Info -->
+        <div class="flex-1 text-center lg:text-right">
+          
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[11px] sm:text-xs font-bold mb-4">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            تطبيقات أندرويد جاهزة للتحميل المباشر
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center lg:items-start gap-4 mb-4">
+            <img id="devAvatar" src="" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-2 border-blue-500/40 shadow-xl hidden" alt="صورة المطور" />
+            <div>
+              <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight mb-2 dev-name">
+                مطور تطبيقات أندرويد
+              </h1>
+              <p class="text-xs sm:text-sm text-blue-400 font-semibold dev-title">
+                Android & Mobile Apps Developer
+              </p>
+            </div>
+          </div>
+
+          <p class="text-slate-300 text-xs sm:text-sm sm:leading-relaxed max-w-2xl mb-6 whitespace-pre-line" id="devBio">
+            أهلاً بك في منصتي الخاصة! أقوم بتطوير تطبيقات أندرويد مخصصة بأعلى معايير الأداء وتجربة المستخدم الحديثة. تصفح التطبيقات وحملها مباشرة وقيمها.
+          </p>
+
+          <!-- Contact Buttons: WhatsApp, Facebook, Install PWA -->
+          <div class="flex items-center justify-center lg:justify-start gap-2.5 sm:gap-3 flex-wrap">
+            
+            <!-- WhatsApp Button -->
+            <a id="whatsappLink" href="#" target="_blank" class="btn-whatsapp text-xs sm:text-sm py-2.5 px-5 hidden">
+              <i class="fab fa-whatsapp text-lg"></i>
+              <span>تواصل عبر واتساب</span>
+            </a>
+
+            <!-- Facebook Button -->
+            <a id="facebookLink" href="#" target="_blank" class="btn-facebook text-xs sm:text-sm py-2.5 px-5 hidden">
+              <i class="fab fa-facebook-f text-base"></i>
+              <span>صفحة فيسبوك</span>
+            </a>
+
+            <!-- Install Web App Button -->
+            <button onclick="triggerInstallPrompt()" class="btn-install text-xs sm:text-sm py-2.5 px-5 install-app-btn">
+              <i class="fas fa-mobile-screen-button text-base"></i>
+              <span>تثبيت كتطبيق بالجوال</span>
+            </button>
+
+            <!-- Playstore Link -->
+            <a id="playstoreLink" href="#" target="_blank" class="btn-secondary text-xs sm:text-sm py-2.5 px-4 hidden">
+              <i class="fab fa-google-play text-emerald-400"></i> متجر Play
+            </a>
+
+          </div>
+        </div>
+
+        <!-- Quick Stats Box -->
+        <div class="grid grid-cols-2 gap-3 sm:gap-4 w-full lg:w-72">
+          <div class="bg-slate-800/80 border border-slate-700/60 p-4 sm:p-5 rounded-2xl text-center shadow-lg">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 mx-auto mb-2 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-base sm:text-lg">
+              <i class="fas fa-mobile-screen"></i>
+            </div>
+            <div class="text-xl sm:text-2xl font-black text-white" id="heroTotalApps">0</div>
+            <div class="text-[11px] sm:text-xs text-slate-400 mt-1 font-medium">تطبيق متاح</div>
+          </div>
+
+          <div class="bg-slate-800/80 border border-slate-700/60 p-4 sm:p-5 rounded-2xl text-center shadow-lg">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 mx-auto mb-2 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base sm:text-lg">
+              <i class="fas fa-cloud-arrow-down"></i>
+            </div>
+            <div class="text-xl sm:text-2xl font-black text-white" id="heroTotalDownloads">0</div>
+            <div class="text-[11px] sm:text-xs text-slate-400 mt-1 font-medium">إجمالي التنزيلات</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Apps Store Section -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+    
+    <!-- Filter & Search Bar -->
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 sm:mb-8">
+      
+      <!-- Category Tabs (Horizontal Scrollable on Mobile) -->
+      <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none snap-x">
+        <button class="category-tab bg-blue-600 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer shrink-0 snap-start" data-category="all">
+          <i class="fas fa-layer-group ml-1"></i> جميع التطبيقات
+        </button>
+        <button class="category-tab bg-slate-800 text-slate-300 hover:text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer shrink-0 snap-start" data-category="أدوات">
+          🛠️ أدوات
+        </button>
+        <button class="category-tab bg-slate-800 text-slate-300 hover:text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer shrink-0 snap-start" data-category="إنتاجية">
+          ⚡ إنتاجية
+        </button>
+        <button class="category-tab bg-slate-800 text-slate-300 hover:text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer shrink-0 snap-start" data-category="ألعاب">
+          🎮 ألعاب
+        </button>
+        <button class="category-tab bg-slate-800 text-slate-300 hover:text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer shrink-0 snap-start" data-category="إسلامي">
+          📖 إسلامي
+        </button>
+      </div>
+
+      <!-- Search Input -->
+      <div class="relative w-full md:w-72">
+        <i class="fas fa-search absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="ابحث عن تطبيق بالاسم أو الوصف..." 
+          class="pr-10 text-xs py-2.5"
+        />
+      </div>
+
+    </div>
+
+    <!-- Loading State -->
+    <div id="appsLoading" class="text-center py-16">
+      <i class="fas fa-spinner fa-spin text-4xl text-blue-500 mb-3"></i>
+      <p class="text-sm text-slate-400">جارٍ جلب التطبيقات المتاحة...</p>
+    </div>
+
+    <!-- Apps Grid -->
+    <div id="appsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6"></div>
+
+  </main>
+
+  <!-- App Details & Reviews Modal -->
+  <div id="appModal" class="modal-overlay">
+    <div class="modal-content relative">
+      <!-- Close Button -->
+      <button id="modalCloseBtn" class="absolute top-4 left-4 z-20 w-9 h-9 rounded-full bg-slate-800/90 text-slate-300 hover:text-white hover:bg-red-600 transition flex items-center justify-center text-sm shadow-md" title="إغلاق">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <!-- Modal Body (Injected by JS) -->
+      <div id="appModalBody"></div>
+    </div>
+  </div>
+
+  <!-- 📲 PWA Installation Guide Modal (For iPhone / Unsupported Browsers) -->
+  <div id="installGuideModal" class="modal-overlay">
+    <div class="modal-content relative max-w-md p-6 sm:p-8 text-center">
+      <button id="closeInstallGuideBtn" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-slate-800 text-slate-300 hover:text-white hover:bg-red-600 transition flex items-center justify-center text-xs">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center mx-auto mb-4 text-3xl text-white shadow-xl">
+        <i class="fas fa-mobile-screen"></i>
+      </div>
+
+      <h3 class="text-xl font-black text-white mb-2">تثبيت الموقع كتطبيق على هاتفك</h3>
+      <p class="text-xs text-slate-300 mb-6 leading-relaxed">
+        يمكنك إضافة الموقع إلى شاشة هاتفك الرئيسية ليعمل كتطبيق سريع ومباشر بدون الحاجة لفتح المتصفح كل مرة!
+      </p>
+
+      <div class="space-y-4 text-right bg-slate-800/60 p-4 rounded-2xl border border-slate-700/60 text-xs">
+        <div class="flex items-start gap-3">
+          <div class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 font-bold">1</div>
+          <div>
+            <div class="font-bold text-white mb-0.5">على أجهزة أندرويد (Chrome):</div>
+            <p class="text-slate-400">اضغط على زر القائمة (الثلاث نقاط ⋮) في أعلى المتصفح، ثم اختر <span class="text-emerald-400 font-bold">"تثبيت التطبيق"</span> أو <span class="text-emerald-400 font-bold">"الإضافة إلى الشاشة الرئيسية"</span>.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3 pt-3 border-t border-slate-700/40">
+          <div class="w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 font-bold">2</div>
+          <div>
+            <div class="font-bold text-white mb-0.5">على أجهزة آيفون (Safari):</div>
+            <p class="text-slate-400">اضغط على زر المشاركة <i class="fas fa-arrow-up-from-bracket text-blue-400"></i> في أسفل المتصفح، ثم مرر واختر <span class="text-blue-400 font-bold">"إضافة إلى الصفحة الرئيسية (Add to Home Screen)"</span>.</p>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="closeInstallGuideModal()" class="btn-primary w-full py-2.5 text-xs mt-6">
+        فهمت ذلك، حسناً
+      </button>
+    </div>
+  </div>
+
+  <!-- 📱 Floating Mobile Install Banner -->
+  <div id="mobileInstallBanner" class="mobile-install-banner hidden md:hidden">
+    <div class="flex items-center gap-3 min-w-0">
+      <img src="/icons/icon.svg" class="w-10 h-10 rounded-xl shrink-0" alt="App Icon">
+      <div class="truncate">
+        <div class="font-bold text-xs text-white truncate">معرض تطبيقات الأندرويد</div>
+        <div class="text-[10px] text-slate-400 truncate">تثبيت التطبيق في هاتفك لسهولة الوصول</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <button onclick="triggerInstallPrompt()" class="btn-primary text-xs py-1.5 px-3 whitespace-nowrap">
+        تثبيت 📲
+      </button>
+      <button onclick="dismissMobileInstallBanner()" class="text-slate-400 hover:text-white p-1 text-xs" title="إغلاق">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-900/60 py-8 sm:py-10 mt-12">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <div class="flex items-center justify-center gap-2 text-slate-400 text-xs sm:text-sm mb-2 flex-wrap">
+        <i class="fab fa-android text-emerald-400"></i>
+        <span class="font-bold text-white dev-name">معرض تطبيقات أندرويد</span>
+        <span>•</span>
+        <span>جميع الحقوق محفوظة &copy; 2026</span>
+      </div>
+      <p class="text-[11px] sm:text-xs text-slate-500">منصة نشر وعرض تطبيقات الأندرويد مع التحميل المباشر والتقييمات الفورية.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+# dependencies
+node_modules
+
+# tools & archives
+.bin
+*.zip
+android-store-deploy/
+
+# environment
+.env
+.DS_Store
+*.log

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم | إدارة تطبيقات الأندرويد</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  
+  <div class="bg-mesh"></div>
+
+  <!-- 1. LOGIN VIEW -->
+  <div id="loginView" class="min-h-screen flex items-center justify-center p-4">
+    <div class="glass-card p-8 sm:p-10 max-w-md w-full text-center border-slate-700/60 shadow-2xl relative">
+      <div class="w-16 h-16 rounded-2xl bg-blue-600/20 text-blue-400 mx-auto flex items-center justify-center text-3xl mb-4 border border-blue-500/30">
+        <i class="fas fa-shield-halved"></i>
+      </div>
+      
+      <h2 class="text-2xl font-black text-white mb-1">لوحة تحكم المسؤول</h2>
+      <p class="text-xs text-slate-400 mb-6">يرجى إدخال كلمة المرور للوصول إلى لوحة الإدارة وإحصائيات الزوار</p>
+
+      <div id="loginError" class="hidden bg-red-950/80 border border-red-500/50 text-red-300 text-xs p-3 rounded-xl mb-4 text-right"></div>
+
+      <form id="loginForm" class="space-y-4">
+        <div class="text-right">
+          <label class="block text-xs text-slate-300 mb-1.5 font-bold">كلمة المرور</label>
+          <div class="relative">
+            <i class="fas fa-lock absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+            <input 
+              type="password" 
+              id="adminPassword" 
+              required 
+              placeholder="••••••••" 
+              class="pr-10 text-sm" 
+            />
+          </div>
+          <span class="text-[11px] text-slate-500 mt-1 block">كلمة المرور الافتراضية: <code class="text-blue-400 font-mono">admin123</code></span>
+        </div>
+
+        <button type="submit" id="loginSubmitBtn" class="btn-primary w-full py-3 text-sm">
+          <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+        </button>
+
+        <a href="/" class="inline-block text-xs text-slate-400 hover:text-white mt-4 transition">
+          <i class="fas fa-arrow-right ml-1"></i> العودة للموقع الرئيسي
+        </a>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. DASHBOARD VIEW -->
+  <div id="dashboardView" class="hidden min-h-screen flex flex-col">
+    
+    <!-- Top Admin Header -->
+    <header class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-40 backdrop-blur-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-sm">
+            <i class="fab fa-android"></i>
+          </div>
+          <div>
+            <div class="font-bold text-sm text-white flex items-center gap-2">
+              <span>لوحة التحكم</span>
+              <span class="badge badge-primary text-[10px] py-0 px-2">Admin</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right buttons -->
+        <div class="flex items-center gap-3">
+          <a href="/" target="_blank" class="btn-secondary text-xs py-2 px-3">
+            <i class="fas fa-external-link-alt text-xs"></i> عرض الموقع
+          </a>
+          <button id="logoutBtn" class="btn-danger text-xs py-2 px-3">
+            <i class="fas fa-sign-out-alt"></i> خروج
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+      
+      <!-- Navigation Tabs -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-4 border-b border-slate-800 mb-8">
+        <button class="admin-tab-btn bg-blue-600 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer" data-tab="overview">
+          <i class="fas fa-chart-line ml-1"></i> الإحصائيات والزوار
+        </button>
+        <button class="admin-tab-btn text-slate-400 hover:text-white px-5 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer" data-tab="apps">
+          <i class="fas fa-cubes ml-1"></i> إدارة التطبيقات
+        </button>
+        <button class="admin-tab-btn text-slate-400 hover:text-white px-5 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer" data-tab="reviews">
+          <i class="fas fa-comments ml-1"></i> التعليقات والتقييمات
+        </button>
+        <button class="admin-tab-btn text-slate-400 hover:text-white px-5 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer" data-tab="settings">
+          <i class="fas fa-cog ml-1"></i> الإعدادات والملف الشخصي
+        </button>
+      </div>
+
+      <!-- TAB 1: OVERVIEW & STATS -->
+      <div id="tab-overview" class="admin-tab-content space-y-8 animate-fade-in">
+        
+        <!-- Stats Cards Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          
+          <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl">
+            <div class="text-xs text-slate-400 mb-1">👥 إجمالي الزيارات</div>
+            <div class="text-2xl font-black text-blue-400" id="statTotalVisitors">0</div>
+          </div>
+
+          <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl">
+            <div class="text-xs text-slate-400 mb-1">📅 زوار اليوم</div>
+            <div class="text-2xl font-black text-emerald-400" id="statTodayVisitors">0</div>
+          </div>
+
+          <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl">
+            <div class="text-xs text-slate-400 mb-1">👤 زوار فريدون</div>
+            <div class="text-2xl font-black text-purple-400" id="statUniqueVisitors">0</div>
+          </div>
+
+          <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl">
+            <div class="text-xs text-slate-400 mb-1">📱 عدد التطبيقات</div>
+            <div class="text-2xl font-black text-amber-400" id="statTotalApps">0</div>
+          </div>
+
+          <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl">
+            <div class="text-xs text-slate-400 mb-1">⬇️ إجمالي التنزيلات</div>
+            <div class="text-2xl font-black text-teal-400" id="statTotalDownloads">0</div>
+          </div>
+
+          <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl">
+            <div class="text-xs text-slate-400 mb-1">💬 التعليقات</div>
+            <div class="text-2xl font-black text-pink-400" id="statTotalReviews">0</div>
+          </div>
+
+        </div>
+
+        <!-- Recent Visitors Activity Table -->
+        <div class="glass-card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fas fa-history text-blue-400"></i> سجل أحدث الزيارات
+            </h3>
+            <span class="text-xs text-slate-400">يتم تتبع الزوار بشكل آمن ومحمي</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-right">
+              <thead>
+                <tr class="border-b border-slate-800 text-xs text-slate-400">
+                  <th class="py-3 px-4">وقت الزيارة</th>
+                  <th class="py-3 px-4">المسار / الصفحة</th>
+                  <th class="py-3 px-4">معرّف IP الفريد</th>
+                  <th class="py-3 px-4">المتصفح / الجهاز</th>
+                </tr>
+              </thead>
+              <tbody id="recentVisitorsTableBody">
+                <tr><td colspan="4" class="text-center py-6 text-slate-400">جارٍ التحميل...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TAB 2: APPS MANAGEMENT -->
+      <div id="tab-apps" class="admin-tab-content hidden space-y-6 animate-fade-in">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h3 class="text-xl font-bold text-white">تطبيقات الأندرويد</h3>
+            <p class="text-xs text-slate-400">أضف تطبيقات جديدة، ارفع ملفات APK، الأيقونات ولقطات الشاشة</p>
+          </div>
+
+          <button id="openAddAppBtn" class="btn-primary text-xs py-2.5 px-5">
+            <i class="fas fa-plus"></i> إضافة تطبيق جديد
+          </button>
+        </div>
+
+        <!-- Apps Table -->
+        <div class="glass-card overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-right">
+              <thead>
+                <tr class="bg-slate-900/90 border-b border-slate-800 text-xs text-slate-400">
+                  <th class="py-3.5 px-4">التطبيق</th>
+                  <th class="py-3.5 px-4">التصنيف</th>
+                  <th class="py-3.5 px-4">التنزيلات</th>
+                  <th class="py-3.5 px-4">التقييم</th>
+                  <th class="py-3.5 px-4">الحالة</th>
+                  <th class="py-3.5 px-4 text-left">إجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="adminAppsTableBody">
+                <tr><td colspan="6" class="text-center py-10 text-slate-400">جارٍ تحميل التطبيقات...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: REVIEWS & COMMENTS -->
+      <div id="tab-reviews" class="admin-tab-content hidden space-y-6 animate-fade-in">
+        <div>
+          <h3 class="text-xl font-bold text-white">إدارة التعليقات والتقييمات</h3>
+          <p class="text-xs text-slate-400">استعرض تعليقات المستخدمين وتقييماتهم واحذف التعليقات غير المناسبة</p>
+        </div>
+
+        <div class="glass-card overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-right">
+              <thead>
+                <tr class="bg-slate-900/90 border-b border-slate-800 text-xs text-slate-400">
+                  <th class="py-3.5 px-4">التطبيق</th>
+                  <th class="py-3.5 px-4">صاحب التعليق</th>
+                  <th class="py-3.5 px-4">التقييم</th>
+                  <th class="py-3.5 px-4">نص التعليق</th>
+                  <th class="py-3.5 px-4 text-left">حذف</th>
+                </tr>
+              </thead>
+              <tbody id="adminReviewsTableBody">
+                <tr><td colspan="5" class="text-center py-8 text-slate-400">جارٍ التحميل...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: SETTINGS & DEVELOPER PROFILE -->
+      <div id="tab-settings" class="admin-tab-content hidden animate-fade-in">
+        <div class="max-w-3xl glass-card p-6 md:p-8">
+          <h3 class="text-xl font-bold text-white mb-1">إعدادات الموقع وحساب المطور</h3>
+          <p class="text-xs text-slate-400 mb-6">قم بتعديل بياناتك الشخصية، النبذة التعريفية، روابط التواصل، وكلمة المرور</p>
+
+          <form id="settingsForm" class="space-y-5">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs text-slate-300 font-bold mb-1">اسم المطور *</label>
+                <input type="text" name="developer_name" id="setDevName" required class="text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-300 font-bold mb-1">المسمى الوظيفي / التخصص</label>
+                <input type="text" name="developer_title" id="setDevTitle" placeholder="مثال: مطور أندرويد و Flutter" class="text-sm" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-300 font-bold mb-1">النبذة التعريفية (Bio)</label>
+              <textarea name="developer_bio" id="setDevBio" rows="3" class="text-sm"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-300 font-bold mb-1">عنوان الموقع (Site Title)</label>
+              <input type="text" name="site_title" id="setSiteTitle" class="text-sm" />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs text-emerald-400 font-bold mb-1">
+                  <i class="fab fa-whatsapp"></i> رقم أو رابط الواتساب (WhatsApp)
+                </label>
+                <input type="text" name="whatsapp_url" id="setWhatsapp" placeholder="مثال: 967771234567 أو https://wa.me/967771234567" class="text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs text-blue-400 font-bold mb-1">
+                  <i class="fab fa-facebook-f"></i> رابط حساب أو صفحة فيسبوك (Facebook)
+                </label>
+                <input type="url" name="facebook_url" id="setFacebook" placeholder="مثال: https://facebook.com/yourprofile" class="text-sm" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs text-slate-300 font-bold mb-1">رابط حساب Google Play (اختياري)</label>
+                <input type="url" name="playstore_url" id="setPlaystore" placeholder="https://play.google.com/store/apps/dev?id=..." class="text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-300 font-bold mb-1">تغيير صورة المطور (Avatar)</label>
+                <input type="file" name="avatar_file" accept="image/*" class="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700" />
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800">
+              <label class="block text-xs text-yellow-400 font-bold mb-1">تغيير كلمة مرور لوحة التحكم (اتركها فارغة إذا لا تريد تغييرها)</label>
+              <input type="password" name="new_password" id="setNewPassword" placeholder="أدخل كلمة مرور جديدة (6 أحرف على الأقل)" class="text-sm" />
+            </div>
+
+            <div class="pt-2">
+              <button type="submit" id="saveSettingsBtn" class="btn-success text-sm py-2.5 px-6">
+                <i class="fas fa-check"></i> حفظ التغييرات
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ADD / EDIT APP MODAL -->
+  <div id="appFormModal" class="modal-overlay">
+    <div class="modal-content relative max-w-2xl">
+      <!-- Close Button -->
+      <button type="button" id="closeAppFormBtn" class="absolute top-4 left-4 z-20 w-8 h-8 rounded-full bg-slate-800 text-slate-300 hover:text-white hover:bg-red-600 transition flex items-center justify-center text-xs">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <div class="p-6 border-b border-slate-800">
+        <h3 class="text-lg font-bold text-white" id="appFormTitle">إضافة تطبيق جديد</h3>
+      </div>
+
+      <form id="appForm" class="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+        <input type="hidden" name="id" id="appIdInput" />
+        <input type="hidden" name="existing_screenshots" id="existingScreenshotsInput" value="[]" />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs text-slate-300 font-bold mb-1">اسم التطبيق *</label>
+            <input type="text" name="title" id="appTitleInput" required placeholder="مثال: تطبيق المنبه الذكي" class="text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs text-slate-300 font-bold mb-1">التصنيف *</label>
+            <select name="category" id="appCategoryInput" class="text-sm">
+              <option value="أدوات">أدوات (Tools)</option>
+              <option value="إنتاجية">إنتاجية (Productivity)</option>
+              <option value="ألعاب">ألعاب (Games)</option>
+              <option value="إسلامي">إسلامي (Islamic)</option>
+              <option value="تعليم">تعليم (Education)</option>
+              <option value="صحة">صحة ورشاقة (Health)</option>
+              <option value="أخرى">أخرى (Other)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs text-slate-300 font-bold mb-1">رقم الإصدار</label>
+            <input type="text" name="version" id="appVersionInput" value="1.0.0" class="text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs text-slate-300 font-bold mb-1">اسم الحزمة (Package)</label>
+            <input type="text" name="package_name" id="appPackageInput" placeholder="com.example.app" class="text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs text-slate-300 font-bold mb-1">حجم الملف</label>
+            <input type="text" name="file_size" id="appSizeInput" placeholder="مثال: 15 MB" class="text-sm" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs text-slate-300 font-bold mb-1">الحد الأدنى للأندرويد</label>
+            <input type="text" name="min_android" id="appMinAndroidInput" value="Android 8.0+" class="text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs text-slate-300 font-bold mb-1">رابط Google Play (إن وجد)</label>
+            <input type="url" name="playstore_link" id="appPlaystoreInput" placeholder="https://play.google.com/..." class="text-sm" />
+          </div>
+        </div>
+
+        <!-- Files Upload Section -->
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-4">
+          <h4 class="text-xs font-bold text-blue-400">الملفات ووسائط التطبيق:</h4>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">أيقونة التطبيق (رفع ملف صورة)</label>
+              <input type="file" name="icon_file" accept="image/*" class="text-xs file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-slate-700 file:text-white" />
+              <div class="text-[11px] text-slate-500 mt-1">أو أدخل رابط أيقونة خارجي:</div>
+              <input type="url" name="icon_url_external" id="appIconExternalInput" placeholder="https://..." class="text-xs mt-1" />
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">ملف التطبيق APK (رفع مباشر)</label>
+              <input type="file" name="apk_file" accept=".apk" class="text-xs file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-emerald-700 file:text-white" />
+              <div class="text-[11px] text-slate-500 mt-1">أو أدخل رابط تحميل APK خارجي (مثل Drive أو DropBox):</div>
+              <input type="url" name="apk_url_external" id="appApkExternalInput" placeholder="https://..." class="text-xs mt-1" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs text-slate-300 mb-1">رفع لقطات شاشة (Screenshots) - يمكنك تحديد عدة صور</label>
+            <input type="file" name="screenshot_files" multiple accept="image/*" class="text-xs file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-slate-700 file:text-white" />
+            <div id="screenshotsPreview" class="flex gap-2 flex-wrap mt-2"></div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-300 font-bold mb-1">نبذة سريعة (سطرين)</label>
+          <input type="text" name="summary" id="appSummaryInput" placeholder="وصف مختصر يظهر على بطاقة التطبيق في الصفحة الرئيسية" class="text-sm" />
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-300 font-bold mb-1">الوصف الكامل والمميزات</label>
+          <textarea name="description" id="appDescInput" rows="4" placeholder="اكتب هنا تفاصيل ومميزات التطبيق..." class="text-sm"></textarea>
+        </div>
+
+        <div class="flex items-center gap-6 pt-2">
+          <label class="flex items-center gap-2 cursor-pointer text-xs">
+            <input type="checkbox" name="is_featured" value="1" id="appFeaturedInput" class="w-4 h-4 rounded text-blue-600" />
+            <span>تمييز التطبيق في الصفحة الرئيسية (Featured)</span>
+          </label>
+
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-400">حالة النشر:</span>
+            <select name="status" id="appStatusInput" class="text-xs py-1 px-2 w-auto">
+              <option value="published">منشور للجميع</option>
+              <option value="draft">مسودة (مخفي)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-800 flex justify-end gap-3">
+          <button type="button" onclick="document.getElementById('appFormModal').classList.remove('active')" class="btn-secondary text-xs py-2 px-4">
+            إلغاء
+          </button>
+          <button type="submit" id="saveAppBtn" class="btn-primary text-xs py-2 px-6">
+            <i class="fas fa-save"></i> حفظ ونشر التطبيق
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/admin.js"></script>
+</body>
+</html>
